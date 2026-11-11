@@ -110,8 +110,10 @@
         return { live: false };
       }
       const url = API + "?token=" + encodeURIComponent(q.token) + (q.type === "tournament" ? "&type=tournament" : "") + "&format=json";
+      const ac = new AbortController();
+      const abortTimer = setTimeout(function () { ac.abort(); }, 10000);
       try {
-        const res = await fetch(url, { headers: { Accept: "application/json" } });
+        const res = await fetch(url, { headers: { Accept: "application/json" }, signal: ac.signal });
         const data = await res.json();
         if (!data || data.ok === false) {
           renderError((data && data.message) || "This live view is not available.");
@@ -126,6 +128,8 @@
       } catch (err) {
         renderError("The live view is temporarily unavailable.");
         return { live: false };
+      } finally {
+        clearTimeout(abortTimer);
       }
     }
 

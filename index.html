@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live match · PadelPulse Matchday</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; background:#0b1c26; color:#fff; font-family: Inter, system-ui, sans-serif; }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 32px 20px 48px; }
+    .kicker { font-family: Anton, sans-serif; letter-spacing: 2px; color: #f2b134; font-size: 16px; margin: 0 0 6px; }
+    h1 { font-family: Anton, sans-serif; font-size: 36px; letter-spacing: 0.4px; margin: 0 0 24px; }
+    h2 { font-family: Inter, sans-serif; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin: 24px 0 10px; }
+    .card { border: 1px solid rgba(255,255,255,0.12); background: #112130; border-radius: 16px; padding: 20px; margin-bottom: 12px; }
+    .names { font-family: Anton, sans-serif; font-size: 22px; margin: 0 0 8px; }
+    .score { font-family: Anton, sans-serif; font-size: 56px; letter-spacing: 1px; color: #f2b134; margin: 8px 0 16px; }
+    .meta, .sit, .updated { color: rgba(255,255,255,0.65); font-size: 14px; line-height: 1.5; }
+    .msg { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.5; }
+    .cta { margin-top: 28px; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.5; }
+    a { color: #f2b134; }
+    .rank { display:flex; align-items:center; gap:10px; min-height:36px; }
+    .rank-n { font-family: Anton, sans-serif; font-size: 20px; min-width: 24px; text-align:center; }
+    .rank-n.gold { color: #f2b134; }
+    .rank-name { flex:1; font-weight:600; }
+    .rank-pts { font-family: Anton, sans-serif; font-size: 22px; min-width: 36px; text-align:right; }
+    .court { font-family: Anton, sans-serif; font-size: 12px; letter-spacing: 1.2px; color: #f2b134; margin: 0 0 6px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="kicker">MATCHDAY</p>
+    <div id="app"><div class="card"><p class="msg">Loading live score…</p></div></div>
+    <p class="cta">Want this on your phone? Request TestFlight access at <a href="https://getpadelpulse.com">getpadelpulse.com</a>. The App Store listing is not open yet.</p>
+  </main>
+  <script>
+    const API = "https://qafnaofzbsckxqgdezkf.supabase.co/functions/v1/live-match";
+    const app = document.getElementById("app");
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (ch) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch];
+      });
+    }
+
+    function params() {
+      const search = new URLSearchParams(location.search);
+      const hash = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+      return {
+        token: (search.get("token") || hash.get("token") || "").trim().toLowerCase(),
+        type: search.get("type") || hash.get("type") || "",
+      };
+    }
+
+    function renderError(message, title) {
+      document.title = (title || "Live match") + " · PadelPulse Matchday";
+      app.innerHTML = "<h1>LIVE MATCH</h1><div class=\"card\"><p class=\"msg\">" + escapeHtml(message) + "</p></div>";
+    }
+
+    function renderMatch(data) {
+      document.title = data.title + " · PadelPulse Matchday";
+      app.innerHTML =
+        "<h1>LIVE MATCH</h1>" +
+        "<div class=\"card\">" +
+          "<p class=\"names\">" + escapeHtml(data.title) + "</p>" +
+          "<p class=\"score\">" + escapeHtml(data.score || "–") + "</p>" +
+          (data.meta ? "<p class=\"meta\">" + escapeHtml(data.meta) + "</p>" : "") +
+        "</div>" +
+        (data.live ? "<p class=\"updated\">This page refreshes every 15 seconds.</p>" : "");
+    }
+
+    function renderTournament(data) {
+      document.title = data.title + " · PadelPulse Matchday";
+      const ranks = (data.leaderboard || []).map(function (row, i) {
+        return "<div class=\"rank\">" +
+          "<span class=\"rank-n" + (i === 0 ? " gold" : "") + "\">" + (i + 1) + "</span>" +
+          "<span class=\"rank-name\">" + escapeHtml(row.name) + "</span>" +
+          "<span class=\"rank-pts\">" + escapeHtml(row.points) + "</span>" +
+        "</div>";
+      }).join("");
+      const rounds = (data.rounds || []).map(function (round) {
+        const sitting = (round.sitting || []).map(function (n) { return escapeHtml(String(n)); }).join(", ");
+        const courts = (round.courts || []).map(function (court) {
+          const a = (court.sideA || []).map(String).join(" & ");
+          const b = (court.sideB || []).map(String).join(" & ");
+          const scored = court.scoreA != null && court.scoreB != null;
+          const line = scored ? a + " " + court.scoreA + "–" + court.scoreB + " " + b : a + " vs " + b;
+          return "<div class=\"card\"><p class=\"court\">COURT " + escapeHtml(String(court.court)) + "</p><p class=\"names\">" + escapeHtml(line) + "</p></div>";
+        }).join("");
+        return "<h2>Round " + escapeHtml(String(round.round)) + "</h2>" +
+          (sitting ? "<p class=\"sit\">Sitting out: " + sitting + "</p>" : "") +
+          courts;
+      }).join("");
+      app.innerHTML =
+        "<h1>" + escapeHtml(String(data.title || "Americano").toUpperCase()) + "</h1>" +
+        (data.meta ? "<p class=\"meta\">" + escapeHtml(data.meta) + "</p>" : "") +
+        "<h2>Leaderboard</h2>" +
+        "<div class=\"card\">" + (ranks || "<p class=\"msg\">No scores yet.</p>") + "</div>" +
+        rounds +
+        (data.updated ? "<p class=\"updated\">Updated " + escapeHtml(data.updated) + " (UK). This page refreshes every 15 seconds.</p>" : "");
+    }
+
+    async function load() {
+      const q = params();
+      if (!q.token) {
+        renderError("This live view link is missing or incomplete.");
+        return { live: false };
+      }
+      const url = API + "?token=" + encodeURIComponent(q.token) + (q.type === "tournament" ? "&type=tournament" : "") + "&format=json";
+      try {
+        const res = await fetch(url, { headers: { Accept: "application/json" } });
+        const data = await res.json();
+        if (!data || data.ok === false) {
+          renderError((data && data.message) || "This live view is not available.");
+          return { live: false };
+        }
+        if (data.kind === "tournament") {
+          renderTournament(data);
+          return { live: true };
+        }
+        renderMatch(data);
+        return { live: !!data.live };
+      } catch (err) {
+        renderError("The live view is temporarily unavailable.");
+        return { live: false };
+      }
+    }
+
+    let timer = null;
+    async function tick() {
+      const result = await load();
+      if (timer) clearInterval(timer);
+      if (result && result.live) timer = setInterval(load, 15000);
+    }
+    tick();
+  </script>
+</body>
+</html>

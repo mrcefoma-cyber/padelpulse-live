@@ -4,37 +4,94 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Live match · PadelPulse Matchday</title>
+  <meta name="description" content="Watch a live padel score — no app install needed. Request TestFlight access at getpadelpulse.com. The App Store listing is not open yet." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PadelPulse Matchday" />
+  <meta property="og:title" content="Live match · PadelPulse Matchday" />
+  <meta property="og:description" content="Watch a live padel score — no app install needed." />
+  <meta property="og:image" content="https://mrcefoma-cyber.github.io/padelpulse-live/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://mrcefoma-cyber.github.io/padelpulse-live/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Live match · PadelPulse Matchday" />
+  <meta name="twitter:description" content="Watch a live padel score — no app install needed." />
+  <meta name="twitter:image" content="https://mrcefoma-cyber.github.io/padelpulse-live/og.png" />
+  <meta name="theme-color" content="#0b1c26" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root { color-scheme: dark; }
+    :root { color-scheme: dark; --navy:#0b1c26; --card:#112130; --deep:#07141b; --gold:#f2b134; --muted:rgba(255,255,255,.65); --dim:rgba(255,255,255,.45); --live:#e23d3d; --border:rgba(255,255,255,.12); }
     * { box-sizing: border-box; }
-    body { margin:0; min-height:100vh; background:#0b1c26; color:#fff; font-family: Inter, system-ui, sans-serif; }
-    .wrap { max-width: 520px; margin: 0 auto; padding: 32px 20px 48px; }
-    .kicker { font-family: Anton, sans-serif; letter-spacing: 2px; color: #f2b134; font-size: 16px; margin: 0 0 6px; }
-    h1 { font-family: Anton, sans-serif; font-size: 36px; letter-spacing: 0.4px; margin: 0 0 24px; }
-    h2 { font-family: Inter, sans-serif; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin: 24px 0 10px; }
-    .card { border: 1px solid rgba(255,255,255,0.12); background: #112130; border-radius: 16px; padding: 20px; margin-bottom: 12px; }
-    .names { font-family: Anton, sans-serif; font-size: 22px; margin: 0 0 8px; }
-    .score { font-family: Anton, sans-serif; font-size: 56px; letter-spacing: 1px; color: #f2b134; margin: 8px 0 16px; }
-    .meta, .sit, .updated { color: rgba(255,255,255,0.65); font-size: 14px; line-height: 1.5; }
-    .msg { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.5; }
-    .cta { margin-top: 28px; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.5; }
-    a { color: #f2b134; }
-    .rank { display:flex; align-items:center; gap:10px; min-height:36px; }
-    .rank-n { font-family: Anton, sans-serif; font-size: 20px; min-width: 24px; text-align:center; }
-    .rank-n.gold { color: #f2b134; }
-    .rank-name { flex:1; font-weight:600; }
-    .rank-pts { font-family: Anton, sans-serif; font-size: 22px; min-width: 36px; text-align:right; }
-    .court { font-family: Anton, sans-serif; font-size: 12px; letter-spacing: 1.2px; color: #f2b134; margin: 0 0 6px; }
+    body { margin:0; min-height:100vh; background:var(--navy); color:#fff; font-family: Inter, system-ui, sans-serif; }
+    .page { max-width: 430px; margin: 0 auto; padding: 28px 20px 40px; }
+    header.top { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+    header.top .wordmark { height:40px; width:auto; display:block; }
+    header.top .kicker { font-family: Anton, "Arial Black", Impact, sans-serif; letter-spacing:2px; color:var(--gold); font-size:18px; margin:0; flex:1; }
+    header.top .spacer { flex:1; }
+    .badge { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-family: Anton, "Arial Black", Impact, sans-serif; font-size:13px; letter-spacing:1.2px; line-height:1; }
+    .badge.live { background:var(--live); color:#fff; }
+    .badge.final, .badge.winner { background:var(--gold); color:var(--navy); }
+    .badge.muted { background:var(--card); color:var(--muted); border:1px solid var(--border); }
+    .dot { width:6px; height:6px; border-radius:50%; background:#fff; box-shadow:0 0 0 0 rgba(255,255,255,.7); animation: pulse 1.6s ease-out infinite; }
+    @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(255,255,255,.7); } 70% { box-shadow:0 0 0 8px rgba(255,255,255,0); } 100% { box-shadow:0 0 0 0 rgba(255,255,255,0); } }
+    .card { background:var(--card); border:2px solid var(--gold); border-radius:16px; padding:20px 18px; margin-bottom:16px; }
+    .card.soft { border-width:1px; padding:12px 14px; }
+    .eyebrow { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:13px; letter-spacing:1.6px; color:var(--gold); margin:0 0 14px; }
+    .score-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .side { flex:1; min-width:0; }
+    .side.right { text-align:right; }
+    .side-name { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:28px; margin:0; line-height:1.05; word-break:break-word; }
+    .side-name.gold { color:var(--gold); }
+    .side-sub { margin:4px 0 0; font-size:11px; color:var(--dim); }
+    .hero-score { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:clamp(52px, 16vw, 72px); color:var(--gold); letter-spacing:1px; line-height:1; margin:0; text-align:center; flex:0 0 auto; }
+    .sets { margin-top:12px; }
+    .set-row, .set-head { display:grid; grid-template-columns: minmax(0,1fr) repeat(var(--cols, 3), 48px); align-items:center; gap:0; }
+    .set-head { padding-bottom:6px; }
+    .set-head span, .lbl { font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--dim); }
+    .set-row { padding:6px 0; }
+    .set-name { font-weight:600; font-size:15px; }
+    .set-num { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:28px; text-align:center; line-height:1; }
+    .set-num.hi { color:var(--gold); }
+    .updated, .meta-line { color:var(--muted); font-size:13px; line-height:1.45; margin:12px 0 0; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; }
+    .chip { background:var(--deep); border:1px solid var(--border); border-radius:999px; padding:6px 10px; font-size:11px; font-weight:500; color:var(--muted); }
+    .stats { display:flex; justify-content:space-between; gap:8px; margin:0 0 16px; }
+    .stat { flex:1; text-align:center; }
+    .stat b { display:block; font-family: Anton, "Arial Black", Impact, sans-serif; font-size:28px; color:var(--gold); font-weight:400; line-height:1.1; }
+    .stat span { display:block; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--dim); margin-top:2px; }
+    h2.sec { font-size:11px; font-weight:500; letter-spacing:1.2px; text-transform:uppercase; color:var(--dim); margin:8px 0 8px; }
+    .story { margin:0; padding:0; list-style:none; }
+    .story li { font-weight:600; font-size:14px; padding:2px 0; }
+    .story li.hi { color:var(--gold); }
+    .rank { display:flex; align-items:center; gap:12px; min-height:40px; padding:6px 4px; }
+    .rank-n { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:20px; width:24px; text-align:center; }
+    .rank-n.gold, .rank.gold .rank-name, .rank.gold .rank-pts { color:var(--gold); }
+    .rank-name { flex:1; font-weight:600; font-size:15px; }
+    .rank-pts { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:22px; min-width:36px; text-align:right; }
+    .lead { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-top:8px; }
+    .lead .who { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:36px; color:var(--gold); margin:2px 0 0; line-height:1; }
+    .lead .pts { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:56px; color:var(--gold); margin:0; line-height:1; text-align:right; }
+    .court { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:12px; letter-spacing:1.2px; color:var(--gold); margin:0 0 6px; }
+    .court-line { font-weight:600; font-size:14px; margin:0; }
+    .sit { color:var(--muted); font-size:12px; margin:0 0 8px; }
+    .title-lg { font-family: Anton, "Arial Black", Impact, sans-serif; font-size:32px; margin:0 0 8px; line-height:1.05; }
+    .msg { color:rgba(255,255,255,.8); font-size:16px; line-height:1.5; margin:0; }
+    .cta { display:block; background:var(--gold); color:var(--navy); text-decoration:none; border-radius:12px; padding:14px 16px; text-align:center; margin-top:8px; }
+    .cta strong { display:block; font-size:15px; font-weight:700; }
+    .cta span { display:block; font-size:11px; font-weight:400; margin-top:4px; color:var(--navy); }
+    a.inline { color:var(--gold); }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <p class="kicker">MATCHDAY</p>
-    <div id="app"><div class="card"><p class="msg">Loading live score…</p></div></div>
-    <p class="cta">Want this on your phone? Request TestFlight access at <a href="https://getpadelpulse.com">getpadelpulse.com</a>. The App Store listing is not open yet.</p>
+  <main class="page">
+    <div id="app">
+      <header class="top">
+        <img class="wordmark" src="wordmark.png" alt="PadelPulse Matchday" width="160" height="57" />
+      </header>
+      <div class="card"><p class="msg">Loading live score…</p></div>
+    </div>
   </main>
   <script>
     const API = "https://qafnaofzbsckxqgdezkf.supabase.co/functions/v1/live-match";
@@ -52,30 +109,224 @@
       return {
         token: (search.get("token") || hash.get("token") || "").trim().toLowerCase(),
         type: search.get("type") || hash.get("type") || "",
+        fixture: (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+          ? (search.get("fixture") || "")
+          : "",
       };
+    }
+
+    function sides(names) {
+      const list = Array.isArray(names) ? names.map(function (n) { return String(n || "").trim(); }).filter(Boolean) : [];
+      if (list.length >= 4) return { a: list[0] + " & " + list[1], b: list[2] + " & " + list[3] };
+      if (list.length === 3) return { a: list[0] + " & " + list[1], b: list[2] };
+      if (list.length === 2) return { a: list[0], b: list[1] };
+      if (list.length === 1) return { a: list[0], b: "Them" };
+      return { a: "Us", b: "Them" };
+    }
+
+    function setRows(sets) {
+      if (!Array.isArray(sets)) return [];
+      return sets.filter(function (row) { return Array.isArray(row) && row.length >= 2; })
+        .map(function (row) { return [Number(row[0]), Number(row[1])]; });
+    }
+
+    function isAmericano(data) {
+      return (data && data.format) === "americano";
+    }
+
+    function formatWhen(iso, fallback) {
+      if (iso) {
+        try {
+          const d = new Date(iso);
+          if (!isNaN(d.getTime())) {
+            const date = d.toLocaleDateString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short" });
+            const time = d.toLocaleTimeString("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit" });
+            return date + " · " + time + " UK";
+          }
+        } catch (e) {}
+      }
+      return fallback || "";
+    }
+
+    function headlineScore(data, rows) {
+      if (isAmericano(data)) {
+        if (data.score) return String(data.score);
+        return rows[0] ? rows[0][0] + "–" + rows[0][1] : "–";
+      }
+      var a = 0, b = 0;
+      rows.forEach(function (row, i) {
+        var current = data.live && i === rows.length - 1;
+        if (current) return;
+        if (row[0] > row[1]) a += 1;
+        else if (row[1] > row[0]) b += 1;
+      });
+      return a + "–" + b;
+    }
+
+    function formatLabel(data) {
+      if (isAmericano(data)) {
+        return Number(data.points_target) > 0 ? "Americano to " + data.points_target : "Americano";
+      }
+      if (!data.format || data.format === "sets") return "Best of 3";
+      return String(data.format);
+    }
+
+    function formatDuration(min) {
+      const n = Number(min);
+      if (!Number.isFinite(n) || n <= 0) return "";
+      if (n < 60) return n + "m";
+      const h = Math.floor(n / 60);
+      const m = n % 60;
+      return m ? h + "h " + m + "m" : h + "h";
+    }
+
+    function headerHtml(badge) {
+      const word = "<img class=\"wordmark\" src=\"wordmark.png\" alt=\"PadelPulse Matchday\" width=\"160\" height=\"57\" />";
+      if (!badge) return "<header class=\"top\">" + word + "</header>";
+      const tone = badge.tone || "muted";
+      const dot = tone === "live" ? "<span class=\"dot\" aria-hidden=\"true\"></span>" : "";
+      return "<header class=\"top\">" + word + "<span class=\"spacer\"></span>" +
+        "<span class=\"badge " + tone + "\">" + dot + escapeHtml(badge.label) + "</span></header>";
+    }
+
+    function ctaHtml() {
+      return "<a class=\"cta\" href=\"https://getpadelpulse.com\">" +
+        "<strong>Request TestFlight access</strong>" +
+        "<span>getpadelpulse.com · App Store not open yet</span></a>";
+    }
+
+    function chipsHtml(items) {
+      const chips = items.filter(Boolean).map(function (c) {
+        return "<span class=\"chip\">" + escapeHtml(c) + "</span>";
+      }).join("");
+      return chips ? "<div class=\"chips\">" + chips + "</div>" : "";
+    }
+
+    function matchBadge(data) {
+      if (data.live) return { tone: "live", label: "LIVE" };
+      const outcome = String(data.outcome || "").toLowerCase();
+      if (outcome === "draw") return { tone: "muted", label: "DRAW" };
+      const w = data.winner;
+      const s = sides(data.names);
+      if (w === 0 || w === "0") return { tone: "winner", label: (s.a || "Us").toUpperCase() + " WIN" };
+      if (w === 1 || w === "1") return { tone: "winner", label: (s.b || "Them").toUpperCase() + " WIN" };
+      return { tone: "final", label: "FINAL" };
+    }
+
+    function setGridHtml(rows, live, names) {
+      if (!rows.length) return "";
+      const cols = Math.max(rows.length, 1);
+      const s = sides(names);
+      const current = live ? rows.length - 1 : -1;
+      let head = "<div class=\"set-head\" style=\"--cols:" + cols + "\"><span class=\"lbl\">Sets</span>";
+      for (let i = 0; i < cols; i++) head += "<span>S" + (i + 1) + "</span>";
+      head += "</div>";
+      function row(label, idx) {
+        let html = "<div class=\"set-row\" style=\"--cols:" + cols + "\"><span class=\"set-name\">" + escapeHtml(label) + "</span>";
+        for (let i = 0; i < cols; i++) {
+          const val = rows[i] ? String(rows[i][idx]) : "–";
+          const hi = i === current || (!live && rows[i] && rows[i][idx] > rows[i][1 - idx]);
+          html += "<span class=\"set-num" + (hi ? " hi" : "") + "\">" + escapeHtml(val) + "</span>";
+        }
+        return html + "</div>";
+      }
+      return "<div class=\"sets\">" + head + row(s.a, 0) + row(s.b, 1) + "</div>";
+    }
+
+    function setStoryHtml(rows, names) {
+      if (rows.length < 2) return "";
+      const s = sides(names);
+      const items = rows.map(function (row, i) {
+        const aWon = row[0] > row[1];
+        const bWon = row[1] > row[0];
+        const who = aWon ? s.a : bWon ? s.b : "Draw";
+        const line = "Set " + (i + 1) + "  ·  " + who + "  " + row[0] + "–" + row[1];
+        const hi = i === rows.length - 1;
+        return "<li" + (hi ? " class=\"hi\"" : "") + ">" + escapeHtml(line) + "</li>";
+      }).join("");
+      return "<h2 class=\"sec\">Set story</h2><div class=\"card soft\"><ul class=\"story\">" + items + "</ul></div>";
+    }
+
+    function statsHtml(data) {
+      const dur = formatDuration(data.duration_min);
+      if (!dur) return "";
+      const fmt = isAmericano(data)
+        ? (Number(data.points_target) > 0 ? "To " + data.points_target : "Americano")
+        : "Bo3";
+      const cell = function (value, caption) {
+        if (!value) return '<div class="stat"></div>';
+        return '<div class="stat"><b>' + escapeHtml(value) + '</b><span>' + escapeHtml(caption) + '</span></div>';
+      };
+      return '<div class="stats">' +
+        cell(dur, "Duration") +
+        cell(fmt, "Format") +
+        '<div class="stat"></div>' +
+        "</div>";
     }
 
     function renderError(message, title) {
       document.title = (title || "Live match") + " · PadelPulse Matchday";
-      app.innerHTML = "<h1>LIVE MATCH</h1><div class=\"card\"><p class=\"msg\">" + escapeHtml(message) + "</p></div>";
+      app.innerHTML = headerHtml() +
+        "<h1 class=\"title-lg\">LIVE MATCH</h1>" +
+        "<div class=\"card\"><p class=\"msg\">" + escapeHtml(message) + "</p></div>" +
+        ctaHtml();
     }
 
     function renderMatch(data) {
-      document.title = data.title + " · PadelPulse Matchday";
+      const s = sides(data.names);
+      const title = data.title || (s.a + " vs " + s.b);
+      document.title = title + " · PadelPulse Matchday";
+      const badge = matchBadge(data);
+      const rows = setRows(data.sets);
+      const americano = isAmericano(data);
+      const score = headlineScore(data, rows);
+      const aWon = !data.live && (data.winner === 0 || data.winner === "0");
+      const bWon = !data.live && (data.winner === 1 || data.winner === "1");
+      const eyebrow = data.live ? "LIVE MATCH" : "FULL TIME";
+      const when = formatWhen(data.started_at, data.when);
+      const rawOutcome = String(data.outcome || "").toLowerCase();
+      const outcomeChip = (!data.live && (rawOutcome === "draw" || rawOutcome === "retired" || rawOutcome === "abandoned"))
+        ? String(data.outcome)
+        : "";
+      const chips = chipsHtml([data.venue || "", when, formatLabel(data), outcomeChip]);
+      const grid = americano ? "" : setGridHtml(rows, !!data.live, data.names);
+      const refresh = data.live ? "<p class=\"updated\">Updates every 15 seconds</p>" : "";
+      const story = (!data.live && !americano) ? setStoryHtml(rows, data.names) : "";
+      const stats = !data.live ? statsHtml(data) : "";
+
       app.innerHTML =
-        "<h1>LIVE MATCH</h1>" +
+        headerHtml(badge) +
         "<div class=\"card\">" +
-          "<p class=\"names\">" + escapeHtml(data.title) + "</p>" +
-          "<p class=\"score\">" + escapeHtml(data.score || "–") + "</p>" +
-          (data.meta ? "<p class=\"meta\">" + escapeHtml(data.meta) + "</p>" : "") +
+          "<p class=\"eyebrow\">" + escapeHtml(eyebrow) + "</p>" +
+          "<div class=\"score-row\">" +
+            "<div class=\"side\"><p class=\"side-name" + (aWon ? " gold" : "") + "\">" + escapeHtml(s.a.toUpperCase()) + "</p></div>" +
+            "<p class=\"hero-score\">" + escapeHtml(score) + "</p>" +
+            "<div class=\"side right\"><p class=\"side-name" + (bWon ? " gold" : "") + "\">" + escapeHtml(s.b.toUpperCase()) + "</p></div>" +
+          "</div>" +
+          grid +
+          refresh +
         "</div>" +
-        (data.live ? "<p class=\"updated\">This page refreshes every 15 seconds.</p>" : "");
+        chips +
+        stats +
+        story +
+        ctaHtml();
+    }
+
+    function tournamentBadge(data) {
+      if (data.live) return { tone: "live", label: "LIVE" };
+      const st = String(data.status || "").toLowerCase();
+      if (st === "complete" || st === "completed" || st === "finished") return { tone: "final", label: "FINAL" };
+      return { tone: "muted", label: (data.status ? String(data.status) : "AMERICANO").toUpperCase() };
     }
 
     function renderTournament(data) {
-      document.title = data.title + " · PadelPulse Matchday";
-      const ranks = (data.leaderboard || []).map(function (row, i) {
-        return "<div class=\"rank\">" +
+      const title = data.title || data.name || "Americano";
+      document.title = title + " · PadelPulse Matchday";
+      const badge = tournamentBadge(data);
+      const board = data.leaderboard || [];
+      const lead = board[0];
+      const ranks = board.map(function (row, i) {
+        return "<div class=\"rank" + (i === 0 ? " gold" : "") + "\">" +
           "<span class=\"rank-n" + (i === 0 ? " gold" : "") + "\">" + (i + 1) + "</span>" +
           "<span class=\"rank-name\">" + escapeHtml(row.name) + "</span>" +
           "<span class=\"rank-pts\">" + escapeHtml(row.points) + "</span>" +
@@ -88,23 +339,60 @@
           const b = (court.sideB || []).map(String).join(" & ");
           const scored = court.scoreA != null && court.scoreB != null;
           const line = scored ? a + " " + court.scoreA + "–" + court.scoreB + " " + b : a + " vs " + b;
-          return "<div class=\"card\"><p class=\"court\">COURT " + escapeHtml(String(court.court)) + "</p><p class=\"names\">" + escapeHtml(line) + "</p></div>";
+          return "<div class=\"card soft\"><p class=\"court\">COURT " + escapeHtml(String(court.court)) + "</p><p class=\"court-line\">" + escapeHtml(line) + "</p></div>";
         }).join("");
-        return "<h2>Round " + escapeHtml(String(round.round)) + "</h2>" +
+        return "<h2 class=\"sec\">Round " + escapeHtml(String(round.round)) + "</h2>" +
           (sitting ? "<p class=\"sit\">Sitting out: " + sitting + "</p>" : "") +
-          courts;
+          (courts || "<p class=\"sit\">No courts in this round yet.</p>");
       }).join("");
+      const metaBits = [
+        data.target_points ? "To " + data.target_points : "",
+        data.timer_minutes ? data.timer_minutes + " min courts" : "",
+        data.court_count ? data.court_count + (Number(data.court_count) === 1 ? " court" : " courts") : "",
+        data.status ? String(data.status) : "",
+      ];
+      const updated = formatWhen(data.updated_at, "") || data.updated || "";
+      const leadBlock = lead
+        ? "<div class=\"lead\"><div><p class=\"lbl\">Leader</p><p class=\"who\">" + escapeHtml(String(lead.name).toUpperCase()) + "</p></div>" +
+          "<div><p class=\"lbl\" style=\"text-align:right\">Points</p><p class=\"pts\">" + escapeHtml(lead.points) + "</p></div></div>"
+        : "";
       app.innerHTML =
-        "<h1>" + escapeHtml(String(data.title || "Americano").toUpperCase()) + "</h1>" +
-        (data.meta ? "<p class=\"meta\">" + escapeHtml(data.meta) + "</p>" : "") +
-        "<h2>Leaderboard</h2>" +
-        "<div class=\"card\">" + (ranks || "<p class=\"msg\">No scores yet.</p>") + "</div>" +
+        headerHtml(badge) +
+        "<div class=\"card\">" +
+          "<p class=\"eyebrow\">AMERICANO</p>" +
+          "<h1 class=\"title-lg\">" + escapeHtml(String(title).toUpperCase()) + "</h1>" +
+          (data.meta || metaBits.filter(Boolean).length
+            ? "<p class=\"meta-line\">" + escapeHtml(data.meta || metaBits.filter(Boolean).join(" · ")) + "</p>"
+            : "") +
+          leadBlock +
+        "</div>" +
+        "<h2 class=\"sec\">Leaderboard</h2>" +
+        "<div class=\"card soft\">" + (ranks || "<p class=\"msg\">No scores yet.</p>") + "</div>" +
         rounds +
-        (data.updated ? "<p class=\"updated\">Updated " + escapeHtml(data.updated) + " (UK). This page refreshes every 15 seconds.</p>" : "");
+        (data.live
+          ? "<p class=\"updated\">" + (updated ? "Updated " + escapeHtml(updated) + ". " : "") + "This page refreshes every 15 seconds.</p>"
+          : (updated ? "<p class=\"updated\">Updated " + escapeHtml(updated) + ".</p>" : "")) +
+        ctaHtml();
     }
 
     async function load() {
       const q = params();
+      if (q.fixture) {
+        try {
+          const res = await fetch("/fixtures/" + encodeURIComponent(q.fixture) + ".json", { headers: { Accept: "application/json" } });
+          const data = await res.json();
+          if (!data || data.ok === false) {
+            renderError((data && data.message) || "This live view is not available.");
+            return { live: false };
+          }
+          if (data.kind === "tournament") { renderTournament(data); return { live: !!data.live }; }
+          renderMatch(data);
+          return { live: !!data.live };
+        } catch (err) {
+          renderError("The live view is temporarily unavailable.");
+          return { live: false };
+        }
+      }
       if (!q.token) {
         renderError("This live view link is missing or incomplete.");
         return { live: false };
@@ -121,7 +409,7 @@
         }
         if (data.kind === "tournament") {
           renderTournament(data);
-          return { live: true };
+          return { live: !!data.live };
         }
         renderMatch(data);
         return { live: !!data.live };
